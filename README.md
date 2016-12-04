@@ -12,25 +12,61 @@ FIST architecture typically consists of the following components:
 ![] (https://github.com/ajain1990/temprepo/blob/master/FIST%20Architecture.PNG)
 
 * ### *FIST BuildTool*
-Tool used during package build. It enables FIST points, which are mentioned inside comment (<aoFISTpoint> .. </aoFISTpoint>) in code.
+It is the initial and the crucial phase where all the FIST points which are mentioned inside comment 
+ (/<aoFISTpoint/> .. /<//aoFISTpoint/>) gets converted into code.
+ 
+It takes the directory in which FIST points need to be enabled, then it copies the directory with the name either suggested by user or it would be named as  <src dir>_aofistenable. Once the directory is cloned/copied, then it switches to that directory and iterates through each file and tries to examine the pattern briefed below.
 
-1. It takes directory in which FIST points need to be enabled.
+```
+/* <aoFISTPoint>
+ * FIST_TRIGGER_RETURN(“eventXYZ”, 1, “Operation failed due to FIST point”)
+ * </aoFISTPoint> */
+```
+If it finds the pattern, then first it eliminates the beginning (/<aoFISTPoint/>) and ending (/<//aoFISTPoint/>) tag and uncomments the code written between them. Once this is done it hands over the file to the CPP tool which would further expand the FIST macros by taking the definitions from the fistdef.h file.
 
-2. First it tries to make a copy of that folder with the name either given by user or it creates directory with name like <src dir>_aofitenable.
-
-3. Once it made a clone of the directory it iterates thorough each file and tries to locate a pattern mentioned below. If it finds any then it removes the above and below part and uncomment the code mentioned between these two the AOFISTPOINT tag.
-
-4. Once this is done, it gives the files to the CPP tool which expands macros present in fistdef.h file.
 
 * ### *FIST Library*
-Stores different fault types, fault locations, fault times, and appropriate hardware semantics or software structures.  Stores various FIST structures and implements library functions. It also maintains FIST event database.
+It is composed of different FIST structures which includes event definitions, various actions and their attributes, it maintains FIST events database in the form of /<key-value/> pair. It also implements different functions for interacting with event DB, concurrent queries to the event DB are synchronized by mutex lock.
+
+FIST Controller communicates with the server to invoke different operations, which in turns calls the corresponding library functions to accomplish the task by updating the config database. Here the Operation would equate to add/remove/enable/disable event etc.
+
+While performing any task in the code if FIST API’s gets encountered, then unique event identifier (specified with  API) would be retrieved and examined in the config db with the help of functions exposed by library and if the event is found then the corresponding actions to it would be triggered. 
+
 
 * ### *FIST Server*
 It facilitates communication between FIST controller and library.  Server defines set of commands and callback functions for each command. The callback function will be called once command is received. Fist controller could send a message to server and wait for a response.
 
 * ### [*FIST Controller*](https://github.com/Gemini-sys/cns/blob/master/core/host/go/aofistdriver/fistctld/fistctl/README.md)
-The 'fistctl' utility can be used to administer FIST events.
+The 'fistctl' utility is used to administer FIST events.
 
+## FIST Instrumentations
+FIST instrumentations allow us to test code path which would not normally be exercised in everyday use. These can be inserted into the relevant code. These are not enabled by default, FIST controller is used to enable them. Whenever this instrumentations hit, first it determines whether the associated event is added by user or not. If yes then related action will be taken else there will be no change in behavior of code flow. 
+A summary of the appearance and use of instrumentation macro is shown below.
+
+* ### FIST_IMPORT_PACKAGE() 
+This macro is used to import all required packages for enabling FIST instrumentation in a particular golang file. If we want to put any FIST points in the file then this macro has to be written in the start of file.
+ FIST_START_SERVER()  This macro captains set of instructions to start FIST server. 
+FIST_TRIGGER_RETURN(“eventName”,  retArg1, retArg2, …)   This macro forces function to return with provided return argument(s), if associated event is present in FIST configuration. Event name is the unique identifier that is used to scan the all loaded events.
+
+```
+/* <aoFISTPoint>
+ * FIST_TRIGGER_RETURN(“eventXYZ”, 1, “Operation failed due to FIST point”)
+ * </aoFISTPoint> */
+```
+
+* ### FIST_TRIGGER_ACTION (“eventName”, instruction1; intruction2; …)  
+This macro is used to trigger instructions if the associated event is enabled by the user. Instructions can be any valid golang expressions or statement. Multiple actions should be comma separated with each other.
+
+```
+/* <aoFISTPoint>
+ * FIST_TRIGGER_ACTION(“eventXYZ”, a = 1; b = 2; c = 3;)
+ * </aoFISTPoint> */
+```
+
+* ### FIST_TRIGGER_DEVIO_EVENT (interface, callbackFunc) 
+* ### FIST_TRIGGER_SSDLOG_EVENT(dev, offset, len, callbackFunc, interface) 
+
+These macros are used to fail IO/SSDLOG on a particular device(or in general if user not specified an device). As we have seen earlier the event name is provided with all above mentioned macros which will be later searched in FIST configuration for triggering respective event.  But with these two macros are nameless. Both of these checks all loaded failure triggers like device, offset etc to cause an associated action trigger. The action can be anything like failing IO/SSDLOG on specified device or additional delay can be added also.
 
 ## FIST Event Actions
 There are list of actions which can be specified, in the form of a program, while adding an event in FIST configuration. The control flow of the actions is implicit. Actions that change the execution status of the event generally cause processing to start again at the beginning of the action list when the event hit again. Some actions will result in the current action to proceed to the next in the list. Once the end of the list is reached, we start over again during the next trigger of event.
