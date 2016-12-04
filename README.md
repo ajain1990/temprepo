@@ -11,7 +11,7 @@ FIST is a framework that we can use to add fault injection to our Starling code.
 FIST architecture typically consists of the following components:
 ![Awesome] (https://github.com/ajain1990/temprepo/blob/master/FIST%20architecture.PNG).
 
-* #### [*FIST BuildTool*]
+* #### *FIST BuildTool*
 Tool used during package build. It enables FIST points, which are mentioned inside comment (<aoFISTpoint> .. </aoFISTpoint>) in code.
 
 1. It takes directory in which FIST points need to be enabled.
@@ -22,10 +22,10 @@ Tool used during package build. It enables FIST points, which are mentioned insi
 
 4. Once this is done, it gives the files to the CPP tool which expands macros present in fistdef.h file.
 
-* #### [*FIST library*]
+* #### *FIST Library*
 Stores different fault types, fault locations, fault times, and appropriate hardware semantics or software structures.  Stores various FIST structures and implements library functions. It also maintains FIST event database.
 
-* #### [*FIST Server*]
+* #### *FIST Server*
 It facilitates communication between FIST controller and library.  Server defines set of commands and callback functions for each command. The callback function will be called once command is received. Fist controller could send a message to server and wait for a response.
 
 * #### [*FIST Controller*](https://github.com/Gemini-sys/cns/blob/master/core/host/go/aofistdriver/fistctld/fistctl/README.md)
@@ -37,18 +37,18 @@ There are list of actions which can be specified, in the form of a program, whil
 
 Currently, there are 4 supported actions namely:
 
-* #### skip
+* #### *skip*
 This action can be used to set up an event that only happens once in every n times.
 It takes a count argument which is decremented every time the event is triggered until the count
 reaches to zero. After this, control will be passed to the next action in the program. If the count is still positive, however, then a break will occur in the action processing until the event is hit next time.
 
-* ### delay
+* #### *delay*
 This action causes the event to sleep till the specified time provided in the argument by user. It will introduce a delay point in the code. It is useful when user want to delay processing on an event(like IO read/write, other hsctl operations etc)
 
-* ### stop
+* #### *stop*
 This action causes the current event to become disabled. Generally it should be the last instruction in the program provided in list of actions because once control executed this action no further action will get chance to execute. Event need to be enabled explicitly with the help of FIST controller to the start over. 
 
-* ### ioerr
+* #### *ioerr*
 This action causes the current event to generate an IO failure. It should be used with events having type DEVIO/SSDLOG. The error value will be set in the error variable passed in as an argument by
 the trigger. If user is not specified any error value then it fails IO with default error.
 
