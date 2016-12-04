@@ -9,7 +9,7 @@ FIST is a framework that we can use to add fault injection to our Starling code.
 
 ## FIST Acrchitecture
 FIST architecture typically consists of the following components:
-![Awesome] (https://github.com/ajain1990/temprepo/blob/master/FIST%20architecture.PNG).
+![] (https://github.com/ajain1990/temprepo/blob/master/FIST%20Architecture.PNG)
 
 * ### *FIST BuildTool*
 Tool used during package build. It enables FIST points, which are mentioned inside comment (<aoFISTpoint> .. </aoFISTpoint>) in code.
