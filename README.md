@@ -8,7 +8,29 @@ According to Wikipedia, "fault injection is a technique for improving the covera
 FIST is a framework that we can use to add fault injection to our Starling code. It aims to be easy to use by means of a simple API, with minimal code impact and little runtime overhead when enabled. This means that for enabling FIST, there are modifications which we have to make in our code and build system.
 
 ## FIST Acrchitecture
-![Awesome] (https://github.com/ajain1990/temprepo/blob/master/FIST%20architecture.PNG)
+FIST architecture typically consists of the following components:
+![Awesome] (https://github.com/ajain1990/temprepo/blob/master/FIST%20architecture.PNG).
+
+* #### FIST BuildTool
+Tool used during package build. It enables FIST points, which are mentioned inside comment (<aoFISTpoint> .. </aoFISTpoint>) in code.
+
+1. It takes directory in which FIST points need to be enabled.
+
+2. First it tries to make a copy of that folder with the name either given by user or it creates directory with name like <src dir>_aofitenable.
+
+3. Once it made a clone of the directory it iterates thorough each file and tries to locate a pattern mentioned below. If it finds any then it removes the above and below part and uncomment the code mentioned between these two the AOFISTPOINT tag.
+
+4. Once this is done, it gives the files to the CPP tool which expands macros present in fistdef.h file.
+
+* #### FIST library
+Stores different fault types, fault locations, fault times, and appropriate hardware semantics or software structures.  Stores various FIST structures and implements library functions. It also maintains FIST event database.
+
+* #### FIST Server
+It facilitates communication between FIST controller and library.  Server defines set of commands and callback functions for each command. The callback function will be called once command is received. Fist controller could send a message to server and wait for a response.
+
+* #### FIST Controller
+The 'fistctl' utility can be used to administer FIST events.
+
 
 ### FIST Event Actions
 There are list of actions which can be specified, in the form of a program, while adding an event in FIST configuration. The control flow of the actions is implicit. Actions that change the execution status of the event generally cause processing to start again at the beginning of the action list when the event hit again. Some actions will result in the current action to proceed to the next in the list. Once the end of the list is reached, we start over again during the next trigger of event.
