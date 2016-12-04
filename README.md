@@ -1,4 +1,4 @@
-# FIST: Fault Injection Simulation and Testing [![Awesome](https://upload.wikimedia.org/wikipedia/en/7/7d/TSSU_fist_logo.jpg)
+# FIST: Fault Injection Simulation and Testing [![Awesome](https://github.com/ajain1990/temprepo/blob/master/TSSU_fist_logo.png)
 
 ## Introduction
 There are many things about the software which only developer knows can fail, and our software is often expected to be able to handle those failures. But how do we test our failure handling code, when it's not easy to make a failure appear in the first place? One way to do it is to perform fault injection.
