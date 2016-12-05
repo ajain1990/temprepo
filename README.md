@@ -7,27 +7,18 @@ According to Wikipedia, "fault injection is a technique for improving the covera
 
 FIST is a framework that we can use to add fault injection to our Starling code. It aims to be easy to use by means of a simple API, with minimal code impact and little runtime overhead when enabled. This means that for enabling FIST, there are modifications which we have to make in our code and build system.
 
-## FIST Acrchitecture
+## FIST Architecture
 FIST architecture typically consists of the following components:
 ![] (https://github.com/ajain1990/temprepo/blob/master/FIST%20Architecture.PNG)
 
 * #### FIST BuildTool
 It is the initial and the crucial phase where all the FIST points which are mentioned inside comment (\<aoFISTpoint\> .. \</aoFISTpoint\>) gets converted into code.
- 
 It takes the directory in which FIST points need to be enabled, then it copies the directory with the name either suggested by user or it would be named as  \<src dir\>_aofistenable. Once the directory is cloned/copied, then it switches to that directory and iterates through each file and tries to examine the pattern briefed below.
-
-```
-/* <aoFISTPoint>
- * FIST_TRIGGER_RETURN(“eventXYZ”, 1, “Operation failed due to FIST point”)
- * </aoFISTPoint> */
-```
 If it finds the pattern, then first it eliminates the beginning (\<aoFISTPoint\>) and ending (\</aoFISTPoint\>) tag and uncomments the code written between them. Once this is done it hands over the file to the CPP tool which would further expand the FIST macros by taking the definitions from the fistdef.h file.
 
 * #### FIST Library
-It is composed of different FIST structures which includes event definitions, various actions and their attributes, it maintains FIST events database in the form of <key-value> pair. It also implements different functions for interacting with event DB, concurrent queries to the event DB are synchronized by mutex lock.
-
+It is composed of different FIST structures which includes event definitions, various actions and their attributes, it maintains FIST events database in the form of \<key-value\> pair. It also implements different functions for interacting with event DB, concurrent queries to the event DB are synchronized by mutex lock.
 FIST Controller communicates with the server to invoke different operations, which in turns calls the corresponding library functions to accomplish the task by updating the config database. Here the Operation would equate to add/remove/enable/disable event etc.
-
 While performing any task in the code if FIST API’s gets encountered, then unique event identifier (specified with  API) would be retrieved and examined in the config db with the help of functions exposed by library and if the event is found then the corresponding actions to it would be triggered. 
 
 * #### FIST Server
