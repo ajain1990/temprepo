@@ -14,7 +14,7 @@ FIST architecture typically consists of the following components:
 #### FIST BuildTool
 It is the initial and the crucial phase where all the FIST points which are mentioned inside comment (\<aoFISTpoint\> .. \</aoFISTpoint\>) gets converted into code.
 
-It takes the directory in which FIST points need to be enabled, then it copies the directory with the name either suggested by user or it would be named as  \<src dir\>_aofistenable. Once the directory is cloned/copied, then it switches to that directory and iterates through each file and tries to examine the pattern briefed below.
+It takes the directory in which FIST points need to be enabled, then it copies the directory with the name either suggested by user or it would be named as  \<src dir\>_aofistenable. Once the directory is copied, then it switches to that directory and iterates through each file and tries to examine the pattern briefed below.
 
 ```
 /* <aoFISTPoint>
