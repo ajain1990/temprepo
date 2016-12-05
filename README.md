@@ -12,7 +12,6 @@ FIST architecture typically consists of the following components:
 ![] (https://github.com/ajain1990/temprepo/blob/master/FIST%20Architecture.PNG).
 
 * ### *FIST BuildTool*
-
 It is the initial and the crucial phase where all the FIST points which are mentioned inside comment 
  /(/<aoFISTpoint/> .. /<//aoFISTpoint/>/) gets converted into code.
  
@@ -42,20 +41,23 @@ It facilitates communication between FIST controller and library.  Server define
 
 The 'fistctl' utility is used to administer FIST events.
 
+## How to use FIST Framework
+FIST in Starling project can be used by inserting points of failure, using different macros defined in fistdef.h file. It is recommended to use meaningful names for points of failure, to easily identify their purpose. 
+
+Usually, we don’t want to enable FIST points in non-debug build. To achieve this, FIST macros are commented out. This would make sure that non-debug builds won’t have a single trace of fault injection code, but with the help of FIST build tool it would be easy to create a fist enabled binary, for testing purposes.
+
 ## FIST Instrumentations
 FIST instrumentations allow us to test code path which would not normally be exercised in everyday use. These can be inserted into the relevant code. These are not enabled by default, FIST controller is used to enable them. Whenever this instrumentations hit, first it determines whether the associated event is added by user or not. If yes then related action will be taken else there will be no change in behavior of code flow. 
+
 A summary of the appearance and use of instrumentation macro is shown below.
 
-* ### FIST_IMPORT_PACKAGE()
-
+* #### FIST_IMPORT_PACKAGE()
 This macro is used to import all required packages for enabling FIST instrumentation in a particular golang file. If we want to put any FIST points in the file then this macro has to be written in the start of file.
 
-* ### FIST_START_SERVER()
-
+* #### FIST_START_SERVER()
 This macro captains set of instructions to start FIST server. 
 
-* ### FIST_TRIGGER_RETURN(“eventName”,  retArg1, retArg2, …)
-
+* #### FIST_TRIGGER_RETURN(“eventName”,  retArg1, retArg2, …)
 This macro forces function to return with provided return argument(s), if associated event is present in FIST configuration. Event name is the unique identifier that is used to scan the all loaded events.
 
 ```
@@ -65,8 +67,7 @@ This macro forces function to return with provided return argument(s), if associ
 ```
 
 
-* ### FIST_TRIGGER_ACTION (“eventName”, instruction1; intruction2; …)
-
+* #### FIST_TRIGGER_ACTION (“eventName”, instruction1; intruction2; …)
 This macro is used to trigger instructions if the associated event is enabled by the user. Instructions can be any valid golang expressions or statement. Multiple actions should be comma separated with each other.
 
 ```
@@ -75,9 +76,7 @@ This macro is used to trigger instructions if the associated event is enabled by
  * </aoFISTPoint> */
 ```
 
-* ### FIST_TRIGGER_DEVIO_EVENT (interface, callbackFunc) 
-* ### FIST_TRIGGER_SSDLOG_EVENT(dev, offset, len, callbackFunc, interface) 
-
+* #### FIST_TRIGGER_DEVIO_EVENT (interface, callbackFunc) & FIST_TRIGGER_SSDLOG_EVENT(dev, offset, len, callbackFunc, interface) 
 These macros are used to fail IO/SSDLOG on a particular device(or in general if user not specified an device). As we have seen earlier the event name is provided with all above mentioned macros which will be later searched in FIST configuration for triggering respective event.  But with these two macros are nameless. Both of these checks all loaded failure triggers like device, offset etc to cause an associated action trigger. The action can be anything like failing IO/SSDLOG on specified device or additional delay can be added also.
 
 ## FIST Event Actions
