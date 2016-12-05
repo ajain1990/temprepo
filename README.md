@@ -16,6 +16,12 @@ It is the initial and the crucial phase where all the FIST points which are ment
 
 It takes the directory in which FIST points need to be enabled, then it copies the directory with the name either suggested by user or it would be named as  \<src dir\>_aofistenable. Once the directory is cloned/copied, then it switches to that directory and iterates through each file and tries to examine the pattern briefed below.
 
+```
+/* <aoFISTPoint>
+ * FIST_TRIGGER_RETURN(“eventXYZ”, 1, “Operation failed due to FIST point”)
+ * </aoFISTPoint> */
+```
+
 If it finds the pattern, then first it eliminates the beginning (\<aoFISTPoint\>) and ending (\</aoFISTPoint\>) tag and uncomments the code written between them. Once this is done it hands over the file to the CPP tool which would further expand the FIST macros by taking the definitions from the fistdef.h file.
 
 #### FIST Library
@@ -41,19 +47,31 @@ FIST instrumentations allow us to test code path which would not normally be exe
 
 A summary of the appearance and use of instrumentation macro is shown below.
 
-* #### FIST_IMPORT_PACKAGE()
+#### FIST_IMPORT_PACKAGE()
 This macro is used to import all required packages for enabling FIST instrumentation in a particular golang file. If we want to put any FIST points in the file then this macro has to be written in the start of file.
 
-* #### FIST_START_SERVER()
+#### FIST_START_SERVER()
 This macro captains set of instructions to start FIST server. 
 
-* #### FIST_TRIGGER_RETURN(“eventName”,  retArg1, retArg2, …)
+#### FIST_TRIGGER_RETURN(“eventName”,  retArg1, retArg2, …)
 This macro forces function to return with provided return argument(s), if associated event is present in FIST configuration. Event name is the unique identifier that is used to scan the all loaded events.
 
-* #### FIST_TRIGGER_ACTION (“eventName”, instruction1; intruction2; …)
+```
+/* <aoFISTPoint>
+ * FIST_TRIGGER_RETURN(“eventXYZ”, 1, “Operation failed due to FIST point”)
+ * </aoFISTPoint> */
+```
+
+#### FIST_TRIGGER_ACTION (“eventName”, instruction1; intruction2; …)
 This macro is used to trigger instructions if the associated event is enabled by the user. Instructions can be any valid golang expressions or statement. Multiple actions should be comma separated with each other.
 
-* #### FIST_TRIGGER_DEVIO_EVENT (interface, callbackFunc) & FIST_TRIGGER_SSDLOG_EVENT(dev, offset, len, callbackFunc, interface) 
+```
+/* <aoFISTPoint>
+ * FIST_TRIGGER_ACTION(“eventXYZ”, a = 1; b = 2; c = 3;)
+ * </aoFISTPoint> */
+```	
+
+#### FIST_TRIGGER_DEVIO_EVENT (interface, callbackFunc) & FIST_TRIGGER_SSDLOG_EVENT(dev, offset, len, callbackFunc, interface) 
 These macros are used to fail IO/SSDLOG on a particular device(or in general if user not specified an device). As we have seen earlier the event name is provided with all above mentioned macros which will be later searched in FIST configuration for triggering respective event.  But with these two macros are nameless. Both of these checks all loaded failure triggers like device, offset etc to cause an associated action trigger. The action can be anything like failing IO/SSDLOG on specified device or additional delay can be added also.
 
 ## FIST Event Actions
