@@ -34,8 +34,10 @@ While performing any task in the code if FIST API’s gets encountered, then uni
 #### FIST Server
 It facilitates communication between FIST controller and library.  Server defines set of commands and callback functions for each command. The callback function will be called once command is received. Fist controller could send a message to server and wait for a response.
 
-#### [FIST Controller](https://github.com/Gemini-sys/cns/blob/master/core/host/go/aofistdriver/fistctld/fistctl/README.md)
+#### FIST Controller
 The 'fistctl' utility is used to administer FIST events.
+
+[*Read more FIST Controller*](https://github.com/Gemini-sys/cns/blob/master/core/host/go/aofistdriver/fistctld/fistctl/README.md)
 
 ## How to use FIST Framework
 FIST in Starling project can be used by inserting points of failure, using different macros defined in fistdef.h file. It is recommended to use meaningful names for points of failure, to easily identify their purpose. 
