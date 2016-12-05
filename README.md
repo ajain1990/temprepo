@@ -46,24 +46,10 @@ This macro captains set of instructions to start FIST server.
 * #### FIST_TRIGGER_RETURN(“eventName”,  retArg1, retArg2, …)
 This macro forces function to return with provided return argument(s), if associated event is present in FIST configuration. Event name is the unique identifier that is used to scan the all loaded events.
 
-```
-/* <aoFISTPoint>
- * FIST_TRIGGER_RETURN(“eventXYZ”, 1, “Operation failed due to FIST point”)
- * </aoFISTPoint> */
-```
-
 * #### FIST_TRIGGER_ACTION (“eventName”, instruction1; intruction2; …)
-
 This macro is used to trigger instructions if the associated event is enabled by the user. Instructions can be any valid golang expressions or statement. Multiple actions should be comma separated with each other.
 
-```
-/* <aoFISTPoint>
- * FIST_TRIGGER_ACTION(“eventXYZ”, a = 1; b = 2; c = 3;)
- * </aoFISTPoint> */
-```
-
 * #### FIST_TRIGGER_DEVIO_EVENT (interface, callbackFunc) & FIST_TRIGGER_SSDLOG_EVENT(dev, offset, len, callbackFunc, interface) 
-
 These macros are used to fail IO/SSDLOG on a particular device(or in general if user not specified an device). As we have seen earlier the event name is provided with all above mentioned macros which will be later searched in FIST configuration for triggering respective event.  But with these two macros are nameless. Both of these checks all loaded failure triggers like device, offset etc to cause an associated action trigger. The action can be anything like failing IO/SSDLOG on specified device or additional delay can be added also.
 
 ## FIST Event Actions
