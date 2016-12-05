@@ -73,8 +73,7 @@ This macro is used to trigger instructions if the associated event is enabled by
  * </aoFISTPoint> */
 ```	
 
-##### FIST_TRIGGER_DEVIO_EVENT (interface, callbackFunc)
-##### FIST_TRIGGER_SSDLOG_EVENT(dev, offset, len, callbackFunc, interface) 
+##### FIST_TRIGGER_DEVIO_EVENT (interface, callbackFunc) & FIST_TRIGGER_SSDLOG_EVENT(dev, offset, len, callbackFunc, interface) 
 These macros are used to fail IO/SSDLOG on a particular device(or in general if user not specified an device). As we have seen earlier the event name is provided with all above mentioned macros which will be later searched in FIST configuration for triggering respective event.  But with these two macros are nameless. Both of these checks all loaded failure triggers like device, offset etc to cause an associated action trigger. The action can be anything like failing IO/SSDLOG on specified device or additional delay can be added also.
 
 ## FIST Event Actions
