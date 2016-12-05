@@ -21,7 +21,7 @@ It takes the directory in which FIST points need to be enabled, then it copies t
  * FIST_TRIGGER_RETURN(“eventXYZ”, 1, “Operation failed due to FIST point”)
  * </aoFISTPoint> */
 ```
-If it finds the pattern, then first it eliminates the beginning (\<aoFISTPoint\>) and ending (\<//aoFISTPoint\>) tag and uncomments the code written between them. Once this is done it hands over the file to the CPP tool which would further expand the FIST macros by taking the definitions from the fistdef.h file.
+If it finds the pattern, then first it eliminates the beginning (\<aoFISTPoint\>) and ending (\</aoFISTPoint\>) tag and uncomments the code written between them. Once this is done it hands over the file to the CPP tool which would further expand the FIST macros by taking the definitions from the fistdef.h file.
 
 * #### FIST Library
 It is composed of different FIST structures which includes event definitions, various actions and their attributes, it maintains FIST events database in the form of <key-value> pair. It also implements different functions for interacting with event DB, concurrent queries to the event DB are synchronized by mutex lock.
