@@ -96,3 +96,6 @@ This action causes the current event to become disabled. Generally it should be 
 This action causes the current event to generate an IO failure. It should be used with events having type DEVIO/SSDLOG. The error value will be set in the error variable passed in as an argument by
 the trigger. If user is not specified any error value then it fails IO with default error.
 
+## Future Work:
+- Inject more FIST instrumentation at various locations in code for more granular testing.
+- Further, test cases can be added or modify existing starling_test.py for enchancing test coverage through FIST framework. 
