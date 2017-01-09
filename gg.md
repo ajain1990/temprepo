@@ -24,7 +24,8 @@ descriptor mm_struct, which is an executive summary of a program’s memory.
 It stores the start and end of memory segments, the number of physical
 memory pages used by the process, the amount of virtual address space used
 etc. Within the memory descriptor we also find the two work horses for managing
-program memory: the set of virtual memory areas and the page tables.
+program memory: the set of virtual memory areas and the page tables. Process
+memory areas are shown below:
 
 ![] (./Memory_layout_of_process.PNG)
 
@@ -51,9 +52,9 @@ be filled in the buffer. Once control comes back to hsctld it issues IOCTL
 in BUSE for completing request. Function corresponding  to this IOCTL firsts
 pins pages of request’s segments in kernel space and the passed buffer data
 would be copied in them with help of copy_from_user().  So overall in any of the
-read/write request, we are making an extra copy of data.
+read/write request, we are making an extra copy of data. Following diagram
+shows how write request is handled currently:
 
-Here's a diagram of what happens for write request:
 ![] (./Workflow_write_req_without_zcopy.PNG)
 
 The zero-copy idea is that whenever a hsctld pulls an IO request from buse a new
@@ -70,9 +71,10 @@ IO performance.
 ## Descriptions of used APIs
 ### vm_mmap()
 This function is used by the kernel to create a new linear address interval.
-If the created address interval is adjacent to an existing address interval,
+If the created address interval is adjacent to an existing address interval
 and if they share the same permissions, the two intervals are merged into one.
-If this is not possible, a new VMA is created. It is declared in <linux/mm.h>:
+If this is not possible, a new VMA is created. This fucntion is declared
+in <linux/mm.h>:
 
 ```
 unsigned long vm_mmap(struct file *file, unsigned long addr, unsigned long len, unsigned long prot, unsigned long flag, unsigned long offset)
@@ -114,14 +116,14 @@ linked list and red-black tree of memory areas.
 
 ### vm_munmap()
 The do_munmap() function removes an address interval from a specified process
-address space. The function is declared in <linux/mm.h>:
+address space.
 
 ```
 int vm_munmap(unsigned long start, size_t len)
 ```
 The first parameter specifies the address space from which the interval starting
-at address start of length len bytes is removed. On success, zero is returned.
-Otherwise, a negative error code is returned.
+at address start of length len bytes is removed. On success, zero is returned else
+a negative error code is returned.
 
 ### find_vma()
 The kernel provides a function, find_vma(), for searching the VMA in which a
@@ -132,9 +134,9 @@ struct vm_area_struct * find_vma(struct mm_struct *mm, unsigned long addr);
 ```
 
 This function searches the given address space for the first memory area whose
-vm_end field is greater than addr. It finds the first memory area that contains
-addr or begins at an address greater than addr. If no such memory area exists,
-the function returns NULL. Otherwise, a pointer to the vm_area_struct structure
+vm_end field is greater than addr and contains addr or begins at an address
+greater than addr. If no such memory area exists, the function returns NULL.
+Otherwise, a pointer to the vm_area_struct structure
 is returned.
 
 ### vm_insert_pfn()
