@@ -15,6 +15,8 @@ coherence, however since mapping is usually done for a relatively large area
 (many kilobytes), these costs would be easily outweighted by CPU copy over
 the same length.
 
+![] (./Shared_Mapping.PNG)
+
 ### How memory management is performed in linux
 Linux processes are implemented in the kernel as instances of task_struct
 (process descriptor). The mm field in task_struct points to the memory
@@ -23,6 +25,8 @@ It stores the start and end of memory segments, the number of physical
 memory pages used by the process, the amount of virtual address space used
 etc. Within the memory descriptor we also find the two work horses for managing
 program memory: the set of virtual memory areas and the page tables.
+
+![] (./Memory_layout_of_process.PNG)
 
 Each virtual memory area (VMA) is a contiguous range of virtual addresses,
 these areas never overlap. An instance of vm_area_struct fully describes a
@@ -50,6 +54,7 @@ would be copied in them with help of copy_from_user().  So overall in any of the
 read/write request, we are making an extra copy of data.
 
 Here's a diagram of what happens for write request:
+![] (./Workflow_write_req_without_zcopy.PNG)
 
 The zero-copy idea is that whenever a hsctld pulls an IO request from buse a new
 virtual memory area(VMA), having size equal to requested data length, is created
@@ -59,6 +64,8 @@ VMA would be sent to hsctld. Now ceph will access these pages directly for
 read/write request. This would cut out an extra copy of request data buffer
 which we are making currently and it would help in improving overall
 IO performance.
+
+![] (./Workflow_write_req_with_zcopy.PNG)
 
 ## Descriptions of used APIs
 ### vm_mmap()
