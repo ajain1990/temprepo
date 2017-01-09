@@ -12,7 +12,7 @@ not only saves memory, it avoids data copy to and from user mode.
 Establishment of this kind of mapping is also a costly VM operation that
 requires page table modifications and TLB flushes in order to maintain memory
 coherence, however since mapping is usually done for a relatively large area
-(many kilobytes), these costs would be easily outweighted by CPU copy over
+(many kilobytes), these costs would be easily outweighed by CPU copy over
 the same length.
 
 ![] (./Shared_Mapping.PNG)
